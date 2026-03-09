@@ -5,13 +5,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rapid-lambda"
-version = "0.2.0"
+version = "0.0.1"
 description = "FastAPI-style routing and dependency injection for AWS Lambda"
 readme = "README.md"
 
 authors = [
     { name="chalapathy v", email="chalapathyv57@gmail.com" }
 ]
+
+license = { text = "MIT" }
 
 requires-python = ">=3.9"
 dependencies = [
