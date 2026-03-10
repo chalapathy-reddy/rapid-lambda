@@ -35,3 +35,12 @@ def list_items(page: int = Query(default=1)):
 def lambda_handler(event, context):
     return app.handler(event, context)
 ```
+
+
+
+## Contributing & License
+
+* Source: `https://github.com/chalapathy-reddy/rapid-lambda`
+* License: MIT
+
+Contributions are welcome via PRs. Please follow the repository's contribution guidelines for tests and code style.
