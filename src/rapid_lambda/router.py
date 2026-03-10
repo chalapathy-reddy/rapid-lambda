@@ -1,4 +1,3 @@
-
 class Router:
 
     def __init__(self):
@@ -11,8 +10,16 @@ class Router:
         }
 
     def add_routes(self, routes: dict):
-        for (path, method), handler in routes.items():
-            self.add(path, method, handler)
+        for (path, method), config in routes.items():
+            if callable(config):
+                self.add(path, method, config)
+            elif isinstance(config, dict):
+                self.add(path, method, config["handler"], log=config.get("log", True))
+            else:
+                raise ValueError(
+                    f"Route config for ({path}, {method}) must be a callable or dict "
+                    "with 'handler' key, e.g. {'handler': fn, 'log': False}"
+                )
 
     def resolve(self, path: str, method: str):
         return self._routes.get((path, method.upper()))

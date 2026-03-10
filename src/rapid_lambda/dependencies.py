@@ -1,4 +1,3 @@
-
 class Depends:
 
     def __init__(self, dependency):

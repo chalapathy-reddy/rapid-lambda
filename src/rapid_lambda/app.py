@@ -1,4 +1,3 @@
-
 import json
 import logging
 
@@ -29,16 +28,17 @@ class LambdaApp:
     def handler(self, event, context):
 
         request = LambdaRequest(event, context)
-
-        route = self.router.resolve(request.path, request.method)
-
-        if not route:
-            raise NotFound()
-
-        handler = route["handler"]
-        should_log = route["log"]
+        should_log = True
 
         try:
+
+            route = self.router.resolve(request.path, request.method)
+
+            if not route:
+                raise NotFound()
+
+            handler = route["handler"]
+            should_log = route["log"]
 
             if should_log:
                 self.logger.info(
@@ -57,6 +57,7 @@ class LambdaApp:
 
             return {
                 "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
                 "body": json.dumps(result)
             }
 
@@ -70,6 +71,7 @@ class LambdaApp:
 
             return {
                 "statusCode": e.status_code,
+                "headers": {"Content-Type": "application/json"},
                 "body": json.dumps({"detail": e.detail})
             }
 
@@ -79,5 +81,6 @@ class LambdaApp:
 
             return {
                 "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
                 "body": json.dumps({"detail": "Internal Server Error"})
             }

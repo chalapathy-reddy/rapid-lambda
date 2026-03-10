@@ -1,4 +1,3 @@
-
 import inspect
 from pydantic import BaseModel, ValidationError
 
@@ -41,10 +40,13 @@ class Executor:
                         continue
                     raise BadRequest(f"Missing query parameter '{name}'")
 
-                try:
-                    kwargs[name] = annotation(raw)
-                except Exception:
-                    raise BadRequest(f"Invalid value for '{name}'")
+                if annotation is inspect.Parameter.empty:
+                    kwargs[name] = raw
+                else:
+                    try:
+                        kwargs[name] = annotation(raw)
+                    except Exception:
+                        raise BadRequest(f"Invalid value for '{name}'")
 
                 continue
 
