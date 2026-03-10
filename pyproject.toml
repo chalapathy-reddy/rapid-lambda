@@ -1,0 +1,34 @@
+
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rapid-lambda"
+version = "0.0.1"
+description = "FastAPI-style routing and dependency injection for AWS Lambda"
+readme = "README.md"
+
+authors = [
+    { name="chalapathy v", email="chalapathyv57@gmail.com" }
+]
+
+urls = {Homepage = "https://github.com", "Source Code" = "https://github.com/chalapathy-reddy/rapid-lambda"}
+
+
+license = { text = "MIT" }
+
+requires-python = ">=3.9"
+dependencies = [
+    "aws-lambda-powertools>=3.23.0",
+    "pydantic>=2.0",
+]
+
+[dependency-groups]
+dev = [
+    "rapid-lambda",
+]
+
+[tool.uv.sources]
+rapid-lambda = { workspace = true }
+
