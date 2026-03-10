@@ -4,6 +4,7 @@ from .dependencies import Depends
 from .query import Query
 from .exceptions import HTTPException, BadRequest, Unauthorized, NotFound
 from .request import LambdaRequest
+from .output import Output
 
 __all__ = [
     "LambdaApp",
@@ -14,4 +15,5 @@ __all__ = [
     "Unauthorized",
     "NotFound",
     "LambdaRequest",
+    "Output"
 ]
