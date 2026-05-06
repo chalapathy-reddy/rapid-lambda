@@ -9,9 +9,9 @@ from .exceptions import HTTPException, NotFound
 
 class LambdaApp:
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, extra_resolvers=None):
         self.router = Router()
-        self.executor = Executor()
+        self.executor = Executor(extra_resolvers=extra_resolvers)
         self.logger = logger or logging.getLogger("rapid_lambda")
 
     def route(self, path: str, method: str, log=True):
@@ -32,10 +32,14 @@ class LambdaApp:
 
         try:
 
-            route = self.router.resolve(request.path, request.method)
+            route, path_params = self.router.resolve(request.path, request.method)
 
             if not route:
                 raise NotFound()
+
+            # Merge router-extracted path params into the request,
+            # overriding anything API Gateway may have already populated.
+            request.path_params = path_params
 
             handler = route["handler"]
             should_log = route["log"]
