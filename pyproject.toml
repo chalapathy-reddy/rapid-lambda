@@ -28,6 +28,10 @@ dev = [
     "rapid-lambda",
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["more_sso"]
+
 [tool.uv.sources]
 rapid-lambda = { workspace = true }
 
