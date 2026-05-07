@@ -13,9 +13,7 @@ authors = [
     { name="chalapathy v", email="chalapathyv57@gmail.com" }
 ]
 
-[project.urls]
-Homepage = "https://github.com/chalapathy-reddy/rapid-lambda"
-"Source Code" = "https://github.com/chalapathy-reddy/rapid-lambda"
+urls = {Homepage = "https://github.com", "Source Code" = "https://github.com/chalapathy-reddy/rapid-lambda"}
 
 license = { text = "MIT" }
 
@@ -27,8 +25,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pytest>=7.0",
-    "pytest-cov>=4.0",
+    "rapid-lambda",
 ]
 
 [tool.uv.sources]
