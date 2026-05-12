@@ -1,8 +1,10 @@
 
 import json
 
-class LambdaRequest:
+from .exceptions import BadRequest
 
+
+class LambdaRequest:
     def __init__(self, event: dict, context):
         self.event = event
         self.context = context
@@ -17,7 +19,14 @@ class LambdaRequest:
         self._raw_body = event.get("body")
         self._json = None
 
+    @property
+    def body(self):
+        return self._raw_body
+    
     def json(self):
         if self._json is None:
-            self._json = json.loads(self._raw_body or "{}")
+            try:
+                self._json = json.loads(self._raw_body or "{}") if isinstance(self._raw_body, str) else self._raw_body
+            except json.JSONDecodeError:
+                raise BadRequest("Invalid JSON in request body")
         return self._json

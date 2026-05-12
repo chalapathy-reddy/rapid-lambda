@@ -1,4 +1,3 @@
-
 import json
 import logging
 
@@ -10,9 +9,9 @@ from .exceptions import HTTPException, NotFound
 
 class LambdaApp:
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, extra_resolvers=None):
         self.router = Router()
-        self.executor = Executor()
+        self.executor = Executor(extra_resolvers=extra_resolvers)
         self.logger = logger or logging.getLogger("rapid_lambda")
 
     def route(self, path: str, method: str, log=True):
@@ -29,16 +28,21 @@ class LambdaApp:
     def handler(self, event, context):
 
         request = LambdaRequest(event, context)
-
-        route = self.router.resolve(request.path, request.method)
-
-        if not route:
-            raise NotFound()
-
-        handler = route["handler"]
-        should_log = route["log"]
+        should_log = True
 
         try:
+
+            route, path_params = self.router.resolve(request.path, request.method)
+
+            if not route:
+                raise NotFound()
+
+            # Merge router-extracted path params into the request,
+            # overriding anything API Gateway may have already populated.
+            request.path_params = path_params
+
+            handler = route["handler"]
+            should_log = route["log"]
 
             if should_log:
                 self.logger.info(
@@ -57,6 +61,7 @@ class LambdaApp:
 
             return {
                 "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
                 "body": json.dumps(result)
             }
 
@@ -70,14 +75,15 @@ class LambdaApp:
 
             return {
                 "statusCode": e.status_code,
+                "headers": {"Content-Type": "application/json"},
                 "body": json.dumps({"detail": e.detail})
             }
 
         except Exception:
-
             self.logger.exception("unhandled error")
 
             return {
                 "statusCode": 500,
-                "body": json.dumps({"detail": "Internal Server Error"})
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"detail": f"Internal Server Error "})
             }
