@@ -80,11 +80,10 @@ class LambdaApp:
             }
 
         except Exception:
-
             self.logger.exception("unhandled error")
 
             return {
                 "statusCode": 500,
                 "headers": {"Content-Type": "application/json"},
-                "body": json.dumps({"detail": "Internal Server Error"})
+                "body": json.dumps({"detail": f"Internal Server Error "})
             }
